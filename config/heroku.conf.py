@@ -9,6 +9,9 @@ X-Request-Start
 X-Heroku-Queue-Wait-Time
 X-Heroku-Queue-Depth
 X-Real-Ip
+X-Forwarded-Proto
+X-Via
+X-Forwarded-Port
 """.split("\n")[1:-1]
 
 def service():
