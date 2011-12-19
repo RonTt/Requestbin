@@ -1,4 +1,6 @@
 import json
+import operator
+
 from flask import session, make_response, request, render_template
 
 from .web import app
@@ -22,7 +24,10 @@ def bins():
 @app.endpoint('api.stats')
 def stats():
     service = app.config['service']
-    stats = {'bin_count': len(service.bins)}
+    stats = {
+        'bin_count': len(service.bins),
+        'request_count': reduce(operator.add, 
+            [len(bin.requests) for name,bin in service.bins.items()], 0)}
     resp = make_response(json.dumps(stats), 200)
     resp.headers['Content-Type'] = 'application/json'
     return resp

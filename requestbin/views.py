@@ -34,18 +34,18 @@ def home():
 def bin(name):
     try:
         bin = app.config['service'].lookup_bin(name)
-        if request.query_string == 'inspect':
-            if bin.private and session.get(bin.name) != bin.secret_key:
-                return "Private bin\n", 403
-            update_recent_bins(name)
-            return render_template('bin.html',
-                bin=bin,
-                host=request.host)
-        else:
-            bin.add(request)
-            return "ok\n"
     except KeyError:
         return "Not found\n", 404
+    if request.query_string == 'inspect':
+        if bin.private and session.get(bin.name) != bin.secret_key:
+            return "Private bin\n", 403
+        update_recent_bins(name)
+        return render_template('bin.html',
+            bin=bin,
+            host=request.host)
+    else:
+        bin.add(request)
+        return "ok\n"
 
 @app.endpoint('views.docs')
 def docs(name):
