@@ -45,7 +45,7 @@ class Request(object):
         self.method = input.method
         self.headers = dict(input.headers)
         for header in self.ignore_headers:
-            del self.headers[header]
+            self.headers.pop(header, None)
         self.query_string = input.query_string
         self.form_data = []
         for k in input.values:
