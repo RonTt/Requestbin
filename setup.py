@@ -9,6 +9,6 @@ setup(
     author_email='jeff.lindsay@twilio.com',
     description='HTTP request collector and inspector',
     packages=find_packages(),
-    install_requires=['gservice', 'feedparser'],
+    install_requires=['ginkgo', 'feedparser'],
     data_files=[],
 )

@@ -3,7 +3,7 @@ import time
 import datetime
 import os
 
-from gservice.config import Setting
+from ginkgo.config import Setting
 
 from .util import random_color
 from .util import tinyid
