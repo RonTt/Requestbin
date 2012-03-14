@@ -4,8 +4,8 @@ import time
 import gevent
 from gevent.pywsgi import WSGIServer
 
-from gservice.core import Service
-from gservice.config import Setting
+from ginkgo.core import Service
+from ginkgo.config import Setting
 
 from . import web
 from .models import Bin
