@@ -25,9 +25,9 @@ class RequestBin(Service):
         try:
             klass = getattr(__import__(storage_module, fromlist=[storage_class]),
                         storage_class)
-        except ImportError:
-            raise ImportError("Unable to load storage backend '{}'".format(
-                                self.storage_backend))
+        except ImportError, e:
+            raise ImportError("Unable to load storage backend '{}': {}".format(
+                                self.storage_backend, e))
         self.storage = klass(self.bin_ttl)
         self.add_service(self.storage)
 
