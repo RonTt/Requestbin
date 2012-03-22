@@ -2,8 +2,8 @@ import time
 
 import redis
 import gevent
-from gservice.core import Service
-from gservice.config import Setting
+from ginkgo.core import Service
+from ginkgo.config import Setting
 
 from ..models import Bin
 

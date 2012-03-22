@@ -41,6 +41,9 @@ class RequestBin(Service):
     def create_bin(self, private=False):
         return self.storage.create_bin(private)
 
+    def create_request(self, bin, request):
+        return self.storage.create_request(bin, request)
+
     def lookup_bin(self, name):
         return self.storage.lookup_bin(name)
 

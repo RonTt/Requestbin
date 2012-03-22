@@ -1,8 +1,8 @@
 import time
 
 import gevent
-from gservice.core import Service
-from gservice.config import Setting
+from ginkgo.core import Service
+from ginkgo.config import Setting
 
 from ..models import Bin
 
@@ -31,6 +31,9 @@ class MemoryStorage(Service):
         bin = Bin(private)
         self.bins[bin.name] = bin
         return self.bins[bin.name]
+
+    def create_request(self, bin, request):
+        bin.add(request)
 
     def lookup_bin(self, name):
         return self.bins[name]

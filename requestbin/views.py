@@ -44,7 +44,7 @@ def bin(name):
             bin=bin,
             host=request.host)
     else:
-        bin.add(request)
+        app.config['service'].create_request(bin, request)
         return "ok\n"
 
 @app.endpoint('views.docs')

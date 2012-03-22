@@ -7,7 +7,7 @@ def random_byte(gradient=None, floor=0):
     max = int(255 / factor)
     return random.randint(floor, max) * factor
 
-def solid16x16gif_datauri(r,g,b): 
+def solid16x16gif_datauri(r,g,b):
     return "data:image/gif;base64,R0lGODlhEAAQAIAA%sACH5BAQAAAAALAAAAAAQABAAAAIOhI+py+0Po5y02ouzPgUAOw==" \
         % base64.b64encode(bytearray([0,r,g,b,0,0]))
 
