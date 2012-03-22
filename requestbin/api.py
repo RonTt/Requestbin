@@ -25,9 +25,8 @@ def bins():
 def stats():
     service = app.config['service']
     stats = {
-        'bin_count': len(service.bins),
-        'request_count': reduce(operator.add, 
-            [len(bin.requests) for name,bin in service.bins.items()], 0)}
+        'bin_count': service.storage.count_bins(),
+        'request_count': service.storage.count_requests(),}
     resp = make_response(json.dumps(stats), 200)
     resp.headers['Content-Type'] = 'application/json'
     return resp

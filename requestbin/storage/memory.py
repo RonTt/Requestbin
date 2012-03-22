@@ -1,4 +1,5 @@
 import time
+import operator
 
 import gevent
 from ginkgo.core import Service
@@ -12,6 +13,7 @@ class MemoryStorage(Service):
     def __init__(self, bin_ttl):
         self.bin_ttl = bin_ttl
         self.bins = {}
+        self.request_count = 0
 
     def do_start(self):
         self.spawn(self._cleanup_loop)
@@ -34,6 +36,13 @@ class MemoryStorage(Service):
 
     def create_request(self, bin, request):
         bin.add(request)
+        self.request_count += 1
+
+    def count_bins(self):
+        return len(self.bins)
+
+    def count_requests(self):
+        return self.request_count
 
     def lookup_bin(self, name):
         return self.bins[name]
