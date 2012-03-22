@@ -13,6 +13,11 @@ X-Forwarded-Proto
 X-Via
 X-Forwarded-Port
 """.split("\n")[1:-1]
+storage_backend = 'requestbin.storage.redis.RedisStorage'
+redis_init = {
+    'host': 'stingfish.redistogo.com', 'port': 9211, 'db': 0,
+    'password': os.environ.get("REDIS_PASSWORD")}
+
 
 def service():
     from requestbin.service import RequestBin
