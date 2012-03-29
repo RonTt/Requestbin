@@ -10,7 +10,7 @@ from .util import tinyid
 from .util import solid16x16gif_datauri
 
 class Bin(object):
-    max_requests = Setting('max_requests', default=50)
+    max_requests = Setting('max_requests', default=20)
 
     def __init__(self, private=False):
         self.created = time.time()
