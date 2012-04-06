@@ -1,9 +1,8 @@
 import time
 import operator
 
-import gevent
-from ginkgo.core import Service
-from ginkgo.config import Setting
+from ginkgo import Service
+from ginkgo import Setting
 
 from ..models import Bin
 
@@ -20,7 +19,7 @@ class MemoryStorage(Service):
 
     def _cleanup_loop(self):
         while True:
-            gevent.sleep(self.cleanup_interval)
+            self.async.sleep(self.cleanup_interval)
             self._expire_bins()
 
     def _expire_bins(self):

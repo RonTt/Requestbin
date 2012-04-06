@@ -1,11 +1,11 @@
 import feedparser
 import time
 
-import gevent
 from gevent.pywsgi import WSGIServer
 
-from ginkgo.core import Service
-from ginkgo.config import Setting
+from ginkgo import Service
+from ginkgo import Setting
+from ginkgo.async.gevent import ServerWrapper
 
 from . import web
 from .models import Bin
@@ -19,7 +19,7 @@ class RequestBin(Service):
 
     def __init__(self):
         self.server = WSGIServer(self.bind_address, web.app)
-        self.add_service(self.server)
+        self.add_service(ServerWrapper(self.server))
 
         storage_module, storage_class = self.storage_backend.rsplit('.', 1)
         try:

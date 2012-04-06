@@ -4,9 +4,8 @@ import time
 import cPickle as pickle
 
 import redis
-import gevent
-from ginkgo.core import Service
-from ginkgo.config import Setting
+from ginkgo import Service
+from ginkgo import Setting
 
 from ..models import Bin
 

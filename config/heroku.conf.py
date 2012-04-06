@@ -18,7 +18,4 @@ redis_init = {
     'host': 'stingfish.redistogo.com', 'port': 9211, 'db': 0,
     'password': os.environ.get("REDIS_PASSWORD")}
 
-
-def service():
-    from requestbin.service import RequestBin
-    return RequestBin()
+service = "requestbin.service.RequestBin"
