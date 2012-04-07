@@ -27,13 +27,13 @@ class RedisStorage(Service):
     def create_bin(self, private=False):
         bin = Bin(private)
         key = self._key(bin.name)
-        self.redis.setex(key, self.bin_ttl, pickle.dumps(bin))
+        self.redis.setex(key, self.bin_ttl, bin.dump())
         return bin
 
     def create_request(self, bin, request):
         bin.add(request)
         key = self._key(bin.name)
-        self.redis.set(key, pickle.dumps(bin))
+        self.redis.set(key, bin.dump())
         self.redis.setnx(self._request_count_key(), 0)
         self.redis.incr(self._request_count_key())
 
@@ -48,7 +48,7 @@ class RedisStorage(Service):
         key = self._key(name)
         serialized_bin = self.redis.get(key)
         try:
-            return pickle.loads(serialized_bin)
+            return Bin.load(serialized_bin)
         except TypeError:
             self.redis.delete(key) # clear bad data
             raise KeyError("Bin not found")

@@ -1,7 +1,10 @@
+import copy
 import json
 import time
 import datetime
 import os
+
+import msgpack
 
 from ginkgo import Setting
 
@@ -28,6 +31,20 @@ class Bin(object):
             name=self.name,
             requests=self.requests))
 
+    def dump(self):
+        o = copy.copy(self.__dict__)
+        o['requests'] = [r.dump() for r in self.requests]
+        return msgpack.dumps(o)
+
+    @staticmethod
+    def load(data):
+        o = msgpack.loads(data)
+        o['requests'] = [Request.load(r) for r in o['requests']]
+        b = Bin()
+        b.__dict__ = o
+        return b
+
+
     def add(self, request):
         self.requests.insert(0, Request(request))
         if len(self.requests) > self.max_requests:
@@ -37,23 +54,37 @@ class Bin(object):
 class Request(object):
     ignore_headers = Setting('ignore_headers', default=[])
 
-    def __init__(self, input):
-        self.id = tinyid(6)
-        self.created = datetime.datetime.now()
-        self.remote_addr = input.headers.get('X-Forwarded-For',
-                input.remote_addr)
-        self.method = input.method
-        self.headers = dict(input.headers)
-        for header in self.ignore_headers:
-            self.headers.pop(header, None)
-        self.query_string = input.query_string
-        self.form_data = []
-        for k in input.values:
-            self.form_data.append([k, input.values[k]])
-        self.body = input.data
-        self.path = input.path
-        self.content_length = input.content_length
-        self.content_type = input.content_type
+    def __init__(self, input=None):
+        if input:
+            self.id = tinyid(6)
+            self.time = time.time()
+            self.remote_addr = input.headers.get('X-Forwarded-For',
+                    input.remote_addr)
+            self.method = input.method
+            self.headers = dict(input.headers)
+            for header in self.ignore_headers:
+                self.headers.pop(header, None)
+            self.query_string = input.query_string
+            self.form_data = []
+            for k in input.values:
+                self.form_data.append([k, input.values[k]])
+            self.body = input.data
+            self.path = input.path
+            self.content_length = input.content_length
+            self.content_type = input.content_type
+
+    @property
+    def created(self):
+        return datetime.datetime.fromtimestamp(self.time)
+
+    def dump(self):
+        return msgpack.dumps(self.__dict__)
+
+    @staticmethod
+    def load(data):
+        r = Request()
+        r.__dict__ = msgpack.loads(data)
+        return r
 
     def __iter__(self):
         out = []
