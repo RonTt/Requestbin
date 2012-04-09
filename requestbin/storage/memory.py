@@ -43,5 +43,8 @@ class MemoryStorage(Service):
     def count_requests(self):
         return self.request_count
 
+    def avg_req_size(self):
+        return None
+
     def lookup_bin(self, name):
         return self.bins[name]

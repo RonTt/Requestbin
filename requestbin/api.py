@@ -26,7 +26,8 @@ def stats():
     service = app.config['service']
     stats = {
         'bin_count': service.storage.count_bins(),
-        'request_count': service.storage.count_requests(),}
+        'request_count': service.storage.count_requests(),
+        'request_size': service.storage.avg_req_size(), }
     resp = make_response(json.dumps(stats), 200)
     resp.headers['Content-Type'] = 'application/json'
     return resp

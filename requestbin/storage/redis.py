@@ -44,6 +44,10 @@ class RedisStorage(Service):
     def count_requests(self):
         return int(self.redis.get(self._request_count_key()) or 0)
 
+    def avg_req_size(self):
+        info = self.redis.info()
+        return info['used_memory'] / info['db0']['keys'] / 1024
+
     def lookup_bin(self, name):
         key = self._key(name)
         serialized_bin = self.redis.get(key)
