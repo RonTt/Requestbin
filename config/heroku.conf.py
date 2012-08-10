@@ -15,7 +15,7 @@ X-Forwarded-Port
 """.split("\n")[1:-1]
 storage_backend = 'requestbin.storage.redis.RedisStorage'
 redis_init = {
-    'host': '50.56.239.31', 'port': 6379, 'db': 0,
+    'host': '50.19.218.147', 'port': 10043, 'db': 0,
     'password': os.environ.get("REDIS_PASSWORD", "")}
 
 service = "requestbin.service.RequestBin"
