@@ -23,7 +23,6 @@ def bins():
 
 @app.endpoint('api.bin')
 def bin(name):
-#    name = request.args.get('name');
     jsonp = request.args.get('jsonp')
     if name:
         try:
@@ -32,13 +31,54 @@ def bin(name):
             return json.dumps(dict(errors=['Bin Not Found'])), 404
 
         try:
-            resp = make_response('%s(%s)' % (jsonp, bin.json()), 200)
-#            for request in bin.requests:
+            if jsonp:
+                resp = make_response('%s(%s)' % (jsonp, bin.json()), 200)
+                resp.headers['Content-Type'] = 'text/javascript'
+            else:
+                resp = make_response(bin.json(), 200)
+                resp.headers['Content-Type'] = 'application/json'
+                resp.headers['Access-Control-Allow-Origin'] = '*'
         except KeyError:
             return json.dumps(dict(errors=[keyerror])), 200
     else:
         return json.dumps(dict(errors=['No Bin Name Supplied'])), 404
     return resp
+
+@app.endpoint('api.binrequest')
+def bin(name, requestid):
+    jsonp = request.args.get('jsonp')
+    if name:
+        if requestid:
+            try:
+                bin = app.config['service'].lookup_bin(name);
+            except KeyError:
+                return json.dumps(dict(errors=['Bin Not Found'])), 404
+
+            try:
+                requestid = int(requestid);
+                binrequest = bin.requests[requestid];
+            except IndexError:
+                return json.dumps(dict(errors=['Request Not Found in Bin'])), 404
+            except TypeError:
+                return json.dumps(dict(errors=['Request Not Found in Bin'])), 404
+            except KeyError:
+                return json.dumps(dict(errors=['Request Not Found in Bin'])), 404
+
+            try:
+                if jsonp:
+                    resp = make_response('%s(%s)' % (jsonp, binrequest.json()), 200)
+                    resp.headers['Content-Type'] = 'text/javascript'
+                else:
+                    resp = make_response(binrequest.json(), 200)
+                    resp.headers['Content-Type'] = 'application/json'
+                    resp.headers['Access-Control-Allow-Origin'] = '*'
+            except KeyError:
+                return json.dumps(dict(errors=[keyerror])), 200
+        else:
+            return json.dumps(dict(errors=['No Requets ID Supplied'])), 404
+    else:
+        return json.dumps(dict(errors=['No Bin Name Supplied'])), 404
+    return resp        
 
 @app.endpoint('api.stats')
 def stats():
