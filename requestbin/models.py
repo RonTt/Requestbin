@@ -29,7 +29,8 @@ class Bin(object):
             private=self.private, 
             color=self.color, 
             name=self.name,
-            requests=self.requests))
+            request_count=len(self.requests)))
+#            requests=self.requests,
 
     def dump(self):
         o = copy.copy(self.__dict__)

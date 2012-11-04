@@ -21,6 +21,25 @@ def bins():
         resp.headers['Access-Control-Allow-Origin'] = '*'
     return resp
 
+@app.endpoint('api.bin')
+def bin(name):
+#    name = request.args.get('name');
+    jsonp = request.args.get('jsonp')
+    if name:
+        try:
+            bin = app.config['service'].lookup_bin(name);
+        except KeyError:
+            return json.dumps(dict(errors=['Bin Not Found'])), 404
+
+        try:
+            resp = make_response('%s(%s)' % (jsonp, bin.json()), 200)
+#            for request in bin.requests:
+        except KeyError:
+            return json.dumps(dict(errors=[keyerror])), 200
+    else:
+        return json.dumps(dict(errors=['No Bin Name Supplied'])), 404
+    return resp
+
 @app.endpoint('api.stats')
 def stats():
     service = app.config['service']
