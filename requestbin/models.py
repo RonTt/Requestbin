@@ -42,6 +42,7 @@ class Bin(object):
         o['requests'] = [Request.load(r) for r in o['requests']]
         b = Bin()
         b.__dict__ = o
+        b.request_count = len(b.requests);
         return b
 
 

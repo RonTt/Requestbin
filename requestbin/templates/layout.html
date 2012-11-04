@@ -49,7 +49,7 @@
           {% for bin in recent %}
           <li>
             <img class="color" src="{{bin.favicon_uri}}" />
-            <a href="/{{bin.name}}?inspect">{{bin.name}}</a>
+            <a href="/{{bin.name}}?inspect">{{bin.name}}</a> ({{bin.request_count}})
             {% if bin.private %}<img src="/static/lock.png" />{% endif %}
           </li>
           {% else %}
