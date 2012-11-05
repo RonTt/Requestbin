@@ -55,8 +55,9 @@ def bin(name, requestid):
                 return json.dumps(dict(errors=['Bin Not Found'])), 404
 
             try:
-                requestid = int(requestid) - 1;
+                requestid = int(requestid);
                 if (requestid > 0):
+                    requestid = requestid - 1;
                     binrequest = bin.requests[requestid];
                 else:
                     return json.dumps(dict(errors=['Request Not Found in Bin'])), 404
