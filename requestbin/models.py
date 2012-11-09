@@ -25,11 +25,14 @@ class Bin(object):
         self.secret_key = os.urandom(24) if self.private else None
 
     def json(self):
-        return json.dumps(dict(
+        return json.dumps(self.to_dict())
+    
+    def to_dict(self):
+        return dict(
             private=self.private, 
             color=self.color, 
             name=self.name,
-            request_count=len(self.requests)))
+            request_count=self.request_count)
 
     def dump(self):
         o = copy.copy(self.__dict__)
@@ -42,9 +45,11 @@ class Bin(object):
         o['requests'] = [Request.load(r) for r in o['requests']]
         b = Bin()
         b.__dict__ = o
-        b.request_count = len(b.requests);
         return b
 
+    @property
+    def request_count(self):
+        return len(self.requests)
 
     def add(self, request):
         self.requests.insert(0, Request(request))
@@ -74,8 +79,8 @@ class Request(object):
             self.content_length = input.content_length
             self.content_type = input.content_type
 
-    def json(self):
-        return json.dumps(dict(
+    def to_dict(self):
+        return dict(
             id=self.id,
             time=self.time,
             remote_addr=self.remote_addr,
@@ -86,8 +91,8 @@ class Request(object):
             body=self.body,
             path=self.path,
             content_length=self.content_length,
-            content_type=self.content_type
-        ))
+            content_type=self.content_type,
+        )
 
     @property
     def created(self):

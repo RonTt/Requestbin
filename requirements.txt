@@ -1,4 +1,3 @@
-
 git+git://github.com/progrium/ginkgo.git#egg=ginkgo_v0.5.0dev0
 gevent==0.13.3
 greenlet==0.3.1

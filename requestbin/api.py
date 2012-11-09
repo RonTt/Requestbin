@@ -5,84 +5,57 @@ from flask import session, make_response, request, render_template
 
 from .web import app
 
+def _response(object, code=200):
+    jsonp = request.args.get('jsonp')
+    if jsonp:
+        resp = make_response('%s(%s)' % (jsonp, json.dumps(object)), 200)
+        resp.headers['Content-Type'] = 'text/javascript'
+    else:
+        resp = make_response(json.dumps(object), code)
+        resp.headers['Content-Type'] = 'application/json'
+        resp.headers['Access-Control-Allow-Origin'] = '*'
+    return resp
+
+
 @app.endpoint('api.bins')
 def bins():
     private = request.form.get('private') == 'true'
     bin = app.config['service'].create_bin(private)
     if bin.private:
         session[bin.name] = bin.secret_key
-    jsonp = request.args.get('jsonp')
-    if jsonp:
-        resp = make_response('%s(%s)' % (jsonp, bin.json()), 200)
-        resp.headers['Content-Type'] = 'text/javascript'
-    else:
-        resp = make_response(bin.json(), 200)
-        resp.headers['Content-Type'] = 'application/json'
-        resp.headers['Access-Control-Allow-Origin'] = '*'
-    return resp
+    return _response(bin.to_dict())
 
 @app.endpoint('api.bin')
 def bin(name):
-    jsonp = request.args.get('jsonp')
-    if name:
-        try:
-            bin = app.config['service'].lookup_bin(name);
-        except KeyError:
-            return json.dumps(dict(errors=['Bin Not Found'])), 404
+    try:
+        bin = app.config['service'].lookup_bin(name)
+    except KeyError:
+        return _response({'error': "Bin not found"}, 404)
 
-        try:
-            if jsonp:
-                resp = make_response('%s(%s)' % (jsonp, bin.json()), 200)
-                resp.headers['Content-Type'] = 'text/javascript'
-            else:
-                resp = make_response(bin.json(), 200)
-                resp.headers['Content-Type'] = 'application/json'
-                resp.headers['Access-Control-Allow-Origin'] = '*'
-        except KeyError:
-            return json.dumps(dict(errors=[keyerror])), 200
-    else:
-        return json.dumps(dict(errors=['No Bin Name Supplied'])), 404
-    return resp
+    return _response(bin.to_dict())
 
-@app.endpoint('api.binrequest')
-def bin(name, requestid):
-    jsonp = request.args.get('jsonp')
-    if name:
-        if requestid:
-            try:
-                bin = app.config['service'].lookup_bin(name);
-            except KeyError:
-                return json.dumps(dict(errors=['Bin Not Found'])), 404
+@app.endpoint('api.requests')
+def requests(bin):
+    try:
+        bin = app.config['service'].lookup_bin(bin)
+    except KeyError:
+        return _response({'error': "Bin not found"}, 404)
 
-            try:
-                requestid = int(requestid);
-                if (requestid > 0):
-                    requestid = requestid - 1;
-                    binrequest = bin.requests[requestid];
-                else:
-                    return json.dumps(dict(errors=['Request Not Found in Bin'])), 404
-            except IndexError:
-                return json.dumps(dict(errors=['Request Not Found in Bin'])), 404
-            except TypeError:
-                return json.dumps(dict(errors=['Request Not Found in Bin'])), 404
-            except KeyError:
-                return json.dumps(dict(errors=['Request Not Found in Bin'])), 404
+    return _response([r.to_dict() for r in bin.requests])
 
-            try:
-                if jsonp:
-                    resp = make_response('%s(%s)' % (jsonp, binrequest.json()), 200)
-                    resp.headers['Content-Type'] = 'text/javascript'
-                else:
-                    resp = make_response(binrequest.json(), 200)
-                    resp.headers['Content-Type'] = 'application/json'
-                    resp.headers['Access-Control-Allow-Origin'] = '*'
-            except KeyError:
-                return json.dumps(dict(errors=[keyerror])), 200
-        else:
-            return json.dumps(dict(errors=['No Requets ID Supplied'])), 404
-    else:
-        return json.dumps(dict(errors=['No Bin Name Supplied'])), 404
-    return resp        
+@app.endpoint('api.request')
+def request_(bin, name):
+    try:
+        bin = app.config['service'].lookup_bin(bin)
+    except KeyError:
+        return _response({'error': "Bin not found"}, 404)
+
+    for req in bin.requests:
+        if req.id == name:
+            return _response(req.to_dict())
+
+    return _response({'error': "Request not found"}, 404)
+
 
 @app.endpoint('api.stats')
 def stats():
