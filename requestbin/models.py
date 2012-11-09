@@ -29,7 +29,7 @@ class Bin(object):
             private=self.private, 
             color=self.color, 
             name=self.name,
-            requests=self.requests))
+            request_count=len(self.requests)))
 
     def dump(self):
         o = copy.copy(self.__dict__)
@@ -42,6 +42,7 @@ class Bin(object):
         o['requests'] = [Request.load(r) for r in o['requests']]
         b = Bin()
         b.__dict__ = o
+        b.request_count = len(b.requests);
         return b
 
 
@@ -72,6 +73,21 @@ class Request(object):
             self.path = input.path
             self.content_length = input.content_length
             self.content_type = input.content_type
+
+    def json(self):
+        return json.dumps(dict(
+            id=self.id,
+            time=self.time,
+            remote_addr=self.remote_addr,
+            method=self.method,
+            headers=self.headers,
+            query_string=self.query_string,
+            form_data=self.form_data,
+            body=self.body,
+            path=self.path,
+            content_length=self.content_length,
+            content_type=self.content_type
+        ))
 
     @property
     def created(self):
