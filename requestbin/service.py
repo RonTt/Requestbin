@@ -8,6 +8,7 @@ from ginkgo import Setting
 from ginkgo.async.gevent import ServerWrapper
 
 from . import web
+from . import capture
 from .models import Bin
 
 class RequestBin(Service):
@@ -18,7 +19,8 @@ class RequestBin(Service):
                               default='requestbin.storage.memory.MemoryStorage')
 
     def __init__(self):
-        self.server = WSGIServer(self.bind_address, web.app)
+        self.server = WSGIServer(self.bind_address, web.app,
+                handler_class=capture.RawCaptureWSGIHandler)
         self.add_service(ServerWrapper(self.server))
 
         storage_module, storage_class = self.storage_backend.rsplit('.', 1)

@@ -3,6 +3,7 @@ import json
 import time
 import datetime
 import os
+import re
 
 import msgpack
 
@@ -59,6 +60,7 @@ class Bin(object):
 
 class Request(object):
     ignore_headers = Setting('ignore_headers', default=[])
+    max_raw_size = Setting('max_raw_size', default=1024*10)
 
     def __init__(self, input=None):
         if input:
@@ -78,6 +80,14 @@ class Request(object):
             self.path = input.path
             self.content_length = input.content_length
             self.content_type = input.content_type
+
+            # This is where the magic of capture.py comes in
+            self.raw = input.environ['raw'].getvalue()
+            for header in self.ignore_headers:
+                self.raw = re.sub(r'{}: [^\n]+\n'.format(header), 
+                                    '', self.raw, flags=re.IGNORECASE)
+            if len(self.raw) > self.max_raw_size:
+                self.raw = self.raw[0:self.max_raw_size]
 
     def to_dict(self):
         return dict(

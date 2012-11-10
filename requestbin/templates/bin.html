@@ -33,25 +33,34 @@
       .request .meta a { color: #aaa; }
       .request .pills { margin-bottom: 0px; float: right; }
       .request .command { display: inline; }
-      .request .view { clear: both; }
+      .request .viewer { clear: both; }
       .request .contentinfo.note { 
         float: right; 
         text-align: right; 
         font-size: 16px; 
         color: #aaa; 
-        margin-right: 5px; 
+        margin-right: 5px;
+        min-width: 300px; 
       }
-      .request .headers-view li { color: #404040; margin-left: 130px; }
-      .request .headers-view li div { 
+      .request .content-view, .request .headers-view {
+        width: 0;
+      }
+      .request .content-view td, .request .headers-view td { 
+        padding: 2px;
+        border-top: none; 
+      }
+      .request .content-view td.value, .request .headers-view td.value { color: #404040; }
+      .request .content-view td.name, .request .headers-view td.name { 
         color: gray; 
         font-weight: bold; 
-        width: 120px; 
-        margin-left: -130px; 
-        float: left; 
-        margin-right: 10px; 
+        min-width: 120px; 
+        max-width: 400px;
+        /*margin-left: -130px; 
+        float: left; */
+        padding-right: 10px;
         text-align: right; 
       }
-      .request .content-view li { color: #404040; margin-left: 130px; }
+      /*.request .content-view li { color: #404040; margin-left: 130px; }
       .request .content-view li div { 
         color: gray; 
         font-weight: bold;
@@ -60,13 +69,14 @@
         float: left; 
         margin-right: 10px; 
         text-align: right;
-      }
+      }*/
     </style>
     <script type="text/javascript">
-      function toggleView(requestId) {
-        $('#'+requestId+' .pills li').toggleClass('active');
-        $('#'+requestId+' .headers-view').toggle();
-        $('#'+requestId+' .content-view').toggle();
+      function toggleView(requestId, view) {
+        $('#'+requestId+' .pills li').removeClass('active')
+        $('#'+requestId+' .pills .'+view+'-tab').addClass('active');
+        $('#'+requestId+' .view').hide()
+        $('#'+requestId+' .'+view+'-view').show();
       }
     </script>
 {% endblock %}
@@ -81,25 +91,36 @@
 
       <h2 class="command">{{request.method}} {{request.path}}</h2>
       <ul class="pills">
-        <li><a href="javascript:void(0)" onclick="toggleView('{{request.id}}')">Headers</a></li>
-        <li class="active"><a href="javascript:void(0)" onclick="toggleView('{{request.id}}')">Content</a></li>
+        <li class="raw-tab"><a href="javascript:void(0)"
+          onclick="toggleView('{{request.id}}', 'raw')">Raw</a></li>
+        <li class="headers-tab"><a href="javascript:void(0)"
+          onclick="toggleView('{{request.id}}', 'headers')">Headers</a></li>
+        <li class="active content-tab"><a href="javascript:void(0)"
+          onclick="toggleView('{{request.id}}', 'content')">Content</a></li>
       </ul>
 
-      <div class="view">
-        <div class="content-view note contentinfo">
+      <div class="viewer">
+        <div class="view content-view note contentinfo">
           {% if request.content_type %}{{request.content_type}}<br />{% endif %}
           {{request.content_length|default("0", true)}} bytes
         </div>
-        <ul class="content-view unstyled">
+        <table class="view content-view unstyled">
           {% for part in request %}
-          <li><div>{{ part.0 }}</div>{{ part.1|escape }}</li>
+          <tr>
+            <td class="name">{{ part.0 }}</td>
+            <td class="value">{{ part.1|escape }}</td>
+          </tr>
           {% endfor %}
-        </ul>
-        <ul class="headers-view unstyled" style="display: none;">
+        </table>
+        <table class="view headers-view unstyled" style="display: none;">
           {% for header in request.headers.items() %}
-          <li><div>{{ header.0 }}</div>{{ header.1|escape }}</li>
+          <tr>
+            <td class="name">{{ header.0 }}</td>
+            <td class="value">{{ header.1|escape }}</td>
+          </tr>
           {% endfor %}
-        </ul>
+        </table>
+        <pre class="view raw-view" style="display: none;">{{request.raw|escape}}</pre>
       </div>
       <hr />
     </div>
