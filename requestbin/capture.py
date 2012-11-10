@@ -1,6 +1,5 @@
 import sys
 
-import teena
 import gevent.pywsgi
 
 from StringIO import StringIO
