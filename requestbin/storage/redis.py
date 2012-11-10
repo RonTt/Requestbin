@@ -28,14 +28,14 @@ class RedisStorage(Service):
         bin = Bin(private)
         key = self._key(bin.name)
         self.redis.set(key, bin.dump())
-        self.redis.expireat(key, bin.created+self.bin_ttl)
+        self.redis.expireat(key, int(bin.created+self.bin_ttl))
         return bin
 
     def create_request(self, bin, request):
         bin.add(request)
         key = self._key(bin.name)
         self.redis.set(key, bin.dump())
-        self.redis.expireat(key, bin.created+self.bin_ttl)
+        self.redis.expireat(key, int(bin.created+self.bin_ttl))
 
         self.redis.setnx(self._request_count_key(), 0)
         self.redis.incr(self._request_count_key())
