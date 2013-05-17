@@ -18,4 +18,5 @@ redis_init = {
     'host': '50.19.218.147', 'port': 10043, 'db': 0,
     'password': os.environ.get("REDIS_PASSWORD", "")}
 
+async = 'ginkgo.async.gevent'
 service = "requestbin.service.RequestBin"
