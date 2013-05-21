@@ -1,6 +1,6 @@
 import urllib
 
-from flask import session, redirect, url_for, escape, request, render_template
+from flask import session, redirect, url_for, escape, request, render_template, make_response
 
 from .web import app
 
@@ -45,7 +45,9 @@ def bin(name):
             host=request.host)
     else:
         app.config['service'].create_request(bin, request)
-        return "ok\n"
+        resp = make_response("ok\n")
+        resp.headers['Sponsored-By'] = "http://runscope.com"
+        return resp
 
 @app.endpoint('views.docs')
 def docs(name):
