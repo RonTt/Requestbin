@@ -1,4 +1,5 @@
 import os
+import urlparse
 
 bind_address = ('0.0.0.0', int(os.environ.get("PORT", 5000)))
 ignore_headers = """
@@ -14,9 +15,11 @@ X-Via
 X-Forwarded-Port
 """.split("\n")[1:-1]
 storage_backend = 'requestbin.storage.redis.RedisStorage'
+
+redis_url = urlparse.urlparse(os.environ.get("REDIS_URL", "redis://50.19.218.147:10043/0"))
 redis_init = {
-    'host': '50.19.218.147', 'port': 10043, 'db': 0,
-    'password': os.environ.get("REDIS_PASSWORD", "")}
+    'host': redis_url.hostname, 'port': redis_url.port, 'db': redis_url.fragment,
+    'password': redis_url.password}
 
 async = 'ginkgo.async.gevent'
 service = "requestbin.service.RequestBin"
