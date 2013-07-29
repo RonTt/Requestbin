@@ -1,7 +1,7 @@
 import os
 import urlparse
 
-bind_address = ('0.0.0.0', int(os.environ.get("PORT", 5000)))
+bind_address = ('0.0.0.0', int(os.environ.get("PORT", 4000)))
 ignore_headers = """
 X-Varnish
 X-Forwarded-For

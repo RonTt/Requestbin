@@ -12,34 +12,24 @@
     </script>
 {% endblock %}
 {% block content %}
-    <!-- Main hero unit for a primary marketing message or call to action -->
-    <div class="hero-unit">
-      <h1>Inspect HTTP requests.</h1>
-      <p>RequestBin lets you create a URL that will collect requests made to it, then let you inspect them in a human-friendly way. Use RequestBin to see what your HTTP client is sending or to look at webhook requests.</p>
-      <p id="create">
-        <a class="btn primary large" onclick="createBin()">Create a RequestBin &raquo;</a><br />
-        <label title="Private bins can only be viewed by you using a browser cookie">
-          <input id="private" type="checkbox" /> Make it a private bin
-        </label>
-      </p>
-    </div>
-    
-    <!-- Example row of columns -->
-    <div class="row">
-      <div class="span6">
-        <h2>Run locally</h2>
-        <p>Although convenient as a service, you can also run RequestBin locally as a command-line tool. Python with pip or setuptools is all you need to get started.</p>
-        <p><a class="btn" href="/docs/Download">Learn more &raquo;</a></p>
-      </div>
-      <div class="span5">
-        <h2>REST API</h2>
-         <p>Create bins and retrieve collected request data with our API. CORS and JSONP are supported so you can integrate RequestBin into your site.</p>
-        <p><a class="btn" href="/docs/API">Learn more &raquo;</a></p>
-     </div>
-      <div class="span5">
-        <h2>Donate</h2>
-        <p>Consider donating to help support RequestBin and prove that we can sustainably run these kinds of public services for the community.</p>
-        <p><a class="btn" href="/docs/Donate">Learn more &raquo;</a></p>
-      </div>
+    <div class="row-fluid">
+        <div class="banner-hero">
+            <h2 class="banner-header"><span class="accent-bg-red">Inspect HTTP Requests</span></h2>
+            <h3 class="banner-subheader">
+              RequestBin lets you create a URL that will collect requests made to it, then let you inspect them in a human-friendly way.<br>
+              Use RequestBin to see what your HTTP client is sending or to inspect and debug webhook requests.</h3>
+
+            <form class="form-inline">
+              <p class="banner-button">
+                <a class="btn btn-success btn-large" onclick="createBin()"><i class="icon-plus-sign"></i> Create a RequestBin</a>
+              </p>
+              
+              <p class="banner-option">
+                <label class="checkbox" title="Private bins can only be viewed by you using a browser cookie">
+                  <input id="private" type="checkbox" /> &nbsp;Private <small>(only viewable from this browser)</small>
+                </label>
+              </p>
+            </form>
+        </div>
     </div>
 {% endblock %}

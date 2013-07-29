@@ -1,8 +1,7 @@
 import urllib
-
 from flask import session, redirect, url_for, escape, request, render_template, make_response
 
-from .web import app
+from requestbin import app
 
 def update_recent_bins(name):
     if 'recent' not in session:

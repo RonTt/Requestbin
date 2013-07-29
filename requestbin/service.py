@@ -7,19 +7,19 @@ from ginkgo import Service
 from ginkgo import Setting
 from ginkgo.async.gevent import ServerWrapper
 
-from . import web
-from . import capture
-from .models import Bin
+from requestbin import app
+from requestbin import capture
+from requestbin.models import Bin
 
 class RequestBin(Service):
-    bind_address = Setting('bind_address', default=('0.0.0.0', 5000))
-    docs_url = Setting('docs_url', default='https://github.com/progrium/requestbin/wiki.atom')
+    bind_address = Setting('bind_address', default=('0.0.0.0', 4001))
+    docs_url = Setting('docs_url', default='https://github.com/Runscope/requestbin/wiki.atom')
     bin_ttl = Setting('bin_ttl', default=48*3600)
     storage_backend = Setting('storage_backend',
                               default='requestbin.storage.memory.MemoryStorage')
 
     def __init__(self):
-        self.server = WSGIServer(self.bind_address, web.app,
+        self.server = WSGIServer(self.bind_address, app,
                 handler_class=capture.RawCaptureWSGIHandler)
         self.add_service(ServerWrapper(self.server))
 
@@ -33,7 +33,7 @@ class RequestBin(Service):
         self.storage = klass(self.bin_ttl)
         self.add_service(self.storage)
 
-        web.app.config['service'] = self
+        app.config['service'] = self
 
         self.docs = None
 

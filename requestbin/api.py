@@ -3,7 +3,7 @@ import operator
 
 from flask import session, make_response, request, render_template
 
-from .web import app
+from requestbin import app
 
 def _response(object, code=200):
     jsonp = request.args.get('jsonp')

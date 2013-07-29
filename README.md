@@ -1,4 +1,6 @@
-Contribute!
+# [RequestB.in](http://requestb.in)
+
+Originally Created by [Jeff Lindsay](http://progrium.com)
 
 Contributors
 ------------
@@ -9,23 +11,18 @@ License
 -------
 MIT
 
-Installation
-============
 
-RequestBin can be used in three ways:
-
-1. Use the hosted service at requestb.in
-1. Deploy your own instance using Heroku
-1. Run it locally from the command line (coming soon)
+Looking to self-host?
+=====================
 
 ## Deploy your own instance using Heroku
 Create a Heroku account if you haven't, then grab the RequestBin source using git:
 
-`$ git clone git://github.com/progrium/requestbin.git`
+`$ git clone git://github.com/Runscope/requestbin.git`
 
 From the project directory, create a Heroku application:
 
-`$ heroku create --stack cedar`
+`$ heroku create`
 
 Add Heroku's addon for redistogo
 
@@ -44,6 +41,3 @@ Now just deploy via git:
 `$ git push heroku master`
 
 It will push to Heroku and give you a URL that your own private RequestBin will be running.
-
-## Run it locally from the command line
-Although this is possible now by checking out the source and poking around, our intention is to release an easy to install version of RequestBin that you can use from the command line to quickly debug local HTTP requests. This is coming soon.
