@@ -28,7 +28,6 @@ def approximate_time(ts):
 
 
 def friendly_size(bytes):
-    print type(bytes)
     if isinstance(bytes, str):
         return bytes
 
