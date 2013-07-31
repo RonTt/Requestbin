@@ -1,8 +1,7 @@
 @import "custom.less";
 
-#recent { list-style-type: none; }
+#recent { list-style-type: none; margin: 0; }
 #recent li { margin-bottom: 4px; }
-#recent .color { margin-left: -22px; float: left; }
 
 
 .banner-button {
@@ -22,7 +21,7 @@ body {
 
 body {
     margin: 0 auto;
-    font-size: 16px;
+    font-size: 14px;
 
 }
 
@@ -85,7 +84,8 @@ header {
 }
 .logo {
     display: inline;
-    font-size: 16px;
+    font-size: 28px;
+    font-weight: normal;
     float:left;
 }
 
@@ -94,7 +94,7 @@ header {
     margin-top: -4px;
 }
 .logo-accent {
-    font-weight: normal;
+    font-weight: bold;
 }
 .logo,
 .logo a {
@@ -116,6 +116,11 @@ header {
     display: inline;
     margin-right: 20px;
     margin-left: 20px;
+}
+
+.nav-menu input {
+    vertical-align: bottom;
+    margin: 0;
 }
 
 .nav-menu:last-child li {
@@ -152,7 +157,7 @@ header {
 
 .banner-subheader {
     font-size: 18px;
-    margin: 20px auto 0px;
+    margin: 60px auto 60px;
     line-height: 22px;
     font-weight: normal;
 }
@@ -575,4 +580,145 @@ header {
     .section-link .icon-th {
         display: none;
     }
+}
+
+.message-wrapper {
+    border: 1px solid @grayLighter;
+    border-radius: @baseBorderRadius;
+    margin-bottom: 20px;
+}
+
+// .message-wrapper.selected {
+//     border: 2px dotted lighten(@linkColor, 30%);
+//     margin-bottom: 15px;
+// }
+
+.message-wrapper.current {
+    border: 2px dotted lighten(@linkColor, 30%);
+}
+
+.message-wrapper .success-message i.icon-ok,
+.message-wrapper .new-result i{
+  color: @green;
+}
+
+.message-wrapper .retry-status .error-message i{
+  color: @red;
+}
+
+.message-wrapper .retry-status .cancel-message i{
+  color: @yellow;
+}
+
+.message-wrapper .retry-status .timeout-message i{
+  color: @orange;
+}
+
+.message-detail {
+    padding: 10px;
+    
+}
+
+.message-output .message-detail {
+    padding: 0;
+}
+
+.message-detail h5,
+.message-output h5 {
+    color: @grayLight;
+}
+
+
+.message-list.new {
+    background-color: lighten(@orange, 49%);
+    border-bottom-color: lighten(@orange, 40%);
+}
+
+.message-list {
+    background-color: @grayLighter;
+    padding: 10px;
+}
+
+.message-list .method {
+    font-weight: bold;
+}
+
+.message-list .content i {
+    color: @gray;
+}
+
+.message-list .times .icon-time,
+.message-list .sizes .icon-cloud-download,
+.message-list .sizes .icon-cloud-upload {
+    color: @grayLight;
+}
+
+.message-list .tools {
+    width: 100px;
+    text-align: right;
+}
+
+.message-list .querystring {
+    color: @grayLight;
+}
+
+.message-list .ok,
+.message-output .ok,
+.message-list .times .icon-time.ok,
+.icon-circle.ok
+{
+    color: @green;
+}
+
+.message-list .warning,
+.message-output .warning,
+.message-list .times .icon-time.warning,
+.icon-circle.warning {
+    color: @orange;
+}
+
+.message-list .info,
+.message-output .info,
+.message-list .times .icon-time.info,
+.icon-circle.info {
+    color: @blue;
+}
+
+.message-list .error,
+.message-output .error,
+.message-list .times .icon-time.error,
+.icon-circle.error,
+.icon-warning-sign.error {
+    color: @red;
+}
+
+.message-list tr.detail {
+    display: none;
+}
+
+.message-list .padder {
+    width: 8px;
+}
+
+.message-detail .body,
+.message-output .body {
+    overflow: auto;
+    padding: 0 0 10px 0;
+    border: none;
+    background-color: transparent;
+    word-break: normal;
+    word-wrap: auto;
+    white-space: pre;
+    max-height: 600px;
+}
+.request-detail .keypair,
+.response-detail .keypair {
+    margin: 0;
+    word-wrap: break-word;
+    white-space: normal;
+}
+
+input.xxlarge {
+    font-size: 42px;
+    height: auto;
 }

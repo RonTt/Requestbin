@@ -2,8 +2,7 @@ import json
 import operator
 
 from flask import session, make_response, request, render_template
-
-from requestbin import app
+from requestbin import app, db
 
 def _response(object, code=200):
     jsonp = request.args.get('jsonp')
@@ -20,33 +19,36 @@ def _response(object, code=200):
 @app.endpoint('api.bins')
 def bins():
     private = request.form.get('private') == 'true'
-    bin = app.config['service'].create_bin(private)
+    bin = db.create_bin(private)
     if bin.private:
         session[bin.name] = bin.secret_key
     return _response(bin.to_dict())
 
+
 @app.endpoint('api.bin')
 def bin(name):
     try:
-        bin = app.config['service'].lookup_bin(name)
+        bin = db.lookup_bin(name)
     except KeyError:
         return _response({'error': "Bin not found"}, 404)
 
     return _response(bin.to_dict())
 
+
 @app.endpoint('api.requests')
 def requests(bin):
     try:
-        bin = app.config['service'].lookup_bin(bin)
+        bin = db.lookup_bin(bin)
     except KeyError:
         return _response({'error': "Bin not found"}, 404)
 
     return _response([r.to_dict() for r in bin.requests])
 
+
 @app.endpoint('api.request')
 def request_(bin, name):
     try:
-        bin = app.config['service'].lookup_bin(bin)
+        bin = db.lookup_bin(bin)
     except KeyError:
         return _response({'error': "Bin not found"}, 404)
 
@@ -59,11 +61,10 @@ def request_(bin, name):
 
 @app.endpoint('api.stats')
 def stats():
-    service = app.config['service']
     stats = {
-        'bin_count': service.storage.count_bins(),
-        'request_count': service.storage.count_requests(),
-        'avg_req_size_kb': service.storage.avg_req_size(), }
+        'bin_count': db.count_bins(),
+        'request_count': db.count_requests(),
+        'avg_req_size_kb': db.avg_req_size(), }
     resp = make_response(json.dumps(stats), 200)
     resp.headers['Content-Type'] = 'application/json'
     return resp

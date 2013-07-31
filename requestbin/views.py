@@ -1,7 +1,7 @@
 import urllib
 from flask import session, redirect, url_for, escape, request, render_template, make_response
 
-from requestbin import app
+from requestbin import app, db
 
 def update_recent_bins(name):
     if 'recent' not in session:
@@ -13,13 +13,14 @@ def update_recent_bins(name):
         session['recent'] = session['recent'][:10]
     session.modified = True
 
+
 def expand_recent_bins():
     if 'recent' not in session:
         session['recent'] = []
     recent = []
     for name in session['recent']:
         try:
-            recent.append(app.config['service'].lookup_bin(name))
+            recent.append(db.lookup_bin(name))
         except KeyError:
             session['recent'].remove(name)
             session.modified = True
@@ -29,10 +30,11 @@ def expand_recent_bins():
 def home():
     return render_template('home.html', recent=expand_recent_bins())
 
+
 @app.endpoint('views.bin')
 def bin(name):
     try:
-        bin = app.config['service'].lookup_bin(name)
+        bin = db.lookup_bin(name)
     except KeyError:
         return "Not found\n", 404
     if request.query_string == 'inspect':
@@ -43,14 +45,15 @@ def bin(name):
             bin=bin,
             host=request.host)
     else:
-        app.config['service'].create_request(bin, request)
+        db.create_request(bin, request)
         resp = make_response("ok\n")
-        resp.headers['Sponsored-By'] = "http://runscope.com"
+        resp.headers['Sponsored-By'] = "https://www.runscope.com"
         return resp
+
 
 @app.endpoint('views.docs')
 def docs(name):
-    doc = app.config['service'].lookup_doc(name)
+    doc = db.lookup_doc(name)
     if doc:
         return render_template('doc.html',
                 content=doc['content'],

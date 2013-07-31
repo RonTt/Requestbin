@@ -2,7 +2,7 @@
 <html>
   <head>
     <title>{% block title %}RequestBin &mdash; Collect, inspect and debug HTTP requests and webhooks{% endblock %}</title>
-    <link href="/static/favicon.ico" rel="shortcut icon" />
+    {% block icon %}<link href="/static/img/logo.png" rel="shortcut icon" />{% endblock %}
     <link href="/static/css/bootstrap.css" rel="stylesheet" media="screen">
     <link href="/static/css/responsive.css" rel="stylesheet" media="screen">
     <link href="/static/css/styles.css" rel="stylesheet" media="screen">
@@ -16,18 +16,19 @@
     
     <div class="runscope-wrap">
         <div class="row-fluid">
-            <p class="tagline">A <a href="https://www.runscope.com" title="Runscope API Tools">Runscope</a> community project. <a href="mailto:help@runscope.com">Send us feedback!</a></p>
+            <p class="tagline">A <a href="https://www.runscope.com" title="Runscope API Tools"><strong>Runscope</strong></a> community project. <a href="mailto:help@runscope.com">Send us feedback!</a></p>
         </div>
     </div>
     <div class="header-wrap">
         <header class="row-fluid">
             <div class="span12">
-               <h1 class="logo"><a href="/">RequestBin</a></h1>
+              <h1 class="logo">
+                <a href="/"><img src="/static/img/logo-2x.png" height="38" width="44" /></a>
+                <a href="/"><span class="logo-accent">Request</span>Bin</a>
+              </h1>
                 <nav>
                     <ul class="nav-menu">
                         <li>{% block binurl %}{% endblock %}</li>
-                        <li class="nav-link"><a href="/docs/API">API</a></li>
-                        <li class="nav-link"><a href="https://github.com/Runscope/requestbin">Source</a></li>
                     </ul>
                 </nav>
             </div>
@@ -35,29 +36,34 @@
     </div>
 
     <div id="content" class="row-fluid">
-      <div class="span10 content-wrap">
+      {% set width = 12 %}
+      {% if recent %} {% set width = 10 %} {% endif %}
+      <div class="span{{width}} content-wrap">
           {% block content %}
           {% endblock %}
       </div>
 
-      <div class="span2">
-        {% block sidebar %}
-        <h5><i class="icon-time"></i> History</h5>
-        <ul id="recent">
-          {% for bin in recent %}
-          <li>
-            <img class="color" src="{{bin.favicon_uri}}" />
-            <a href="/{{bin.name}}?inspect">{{bin.name}}</a> ({{bin.request_count}})
-            {% if bin.private %}<img src="/static/lock.png" />{% endif %}
-          </li>
-          {% else %}
-          <p style="margin-left: -24px; color: gray;">
-            No recent bins.
-          </p>
-          {% endfor %}
-        </ul>
-        {% endblock %}
-      </div>
+      {% if recent %}
+        <div class="span2">
+          {% block sidebar %}
+          <h5><i class="icon-time"></i> History</h5>
+          <ul id="recent">
+            {% for bin in recent %}
+            <li>
+              <a href="/{{bin.name}}?inspect"><i class="icon-circle" style="color: rgb{{bin.color}}"></i></a>
+              <a href="/{{bin.name}}?inspect">{{bin.name}}</a> {% if bin.private %}<i class="icon-lock"></i>{% endif %}
+              ({{bin.request_count}})
+              
+            </li>
+            {% else %}
+            <p style="margin-left: -24px; color: gray;">
+              No recent bins.
+            </p>
+            {% endfor %}
+          </ul>
+          {% endblock %}
+        </div>
+        {% endif %}
     </div>
 
     <div class="footer-wrap">
@@ -84,7 +90,7 @@
                     <li class="footer-link"><a href="https://plus.google.com/110044295418761600228" rel="publisher">Google+</a></li>
                     <li class="footer-link"><a href='https://alpha.app.net/runscope' rel='me'>App.net</a></li>
                 </ul>
-                <p class="copyright">Originally created by <a href="http://progrium.com">Jeff Lindsay</a></p>
+                <p class="copyright">RequestBin originally created by <a href="http://progrium.com">Jeff Lindsay</a>.</p>
                 <p class="copyright">&copy; 2013 Runscope Inc. - <a href="https://www.runscope.com/privacy">Privacy Policy</a> - <a href="https://www.runscope.com/terms">Terms of Service</a></p>
             </div>
         </footer>

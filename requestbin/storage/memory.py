@@ -1,13 +1,12 @@
 import time
 import operator
 
-from ginkgo import Service
-from ginkgo import Setting
-
 from ..models import Bin
 
-class MemoryStorage(Service):
-    cleanup_interval = Setting('cleanup_interval', default=3600)
+from requestbin import config
+
+class MemoryStorage():
+    cleanup_interval = config.CLEANUP_INTERVAL
 
     def __init__(self, bin_ttl):
         self.bin_ttl = bin_ttl

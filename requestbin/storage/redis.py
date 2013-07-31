@@ -4,19 +4,17 @@ import time
 import cPickle as pickle
 
 import redis
-from ginkgo import Service
-from ginkgo import Setting
 
 from ..models import Bin
 
-class RedisStorage(Service):
-    prefix = Setting('redis_prefix', default='requestbin')
-    redis_init = Setting('redis_init', default={
-                            'host': 'localhost', 'port': 6379, 'db': 0})
+from requestbin import config
+
+class RedisStorage():
+    prefix = config.REDIS_PREFIX
 
     def __init__(self, bin_ttl):
         self.bin_ttl = bin_ttl
-        self.redis = redis.StrictRedis(**self.redis_init)
+        self.redis = redis.StrictRedis(host=config.REDIS_HOST, port=config.REDIS_PORT, db=config.REDIS_DB, password=config.REDIS_PASSWORD)
 
     def _key(self, name):
         return '{}_{}'.format(self.prefix, name)

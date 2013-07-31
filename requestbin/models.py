@@ -7,14 +7,14 @@ import re
 
 import msgpack
 
-from ginkgo import Setting
-
 from .util import random_color
 from .util import tinyid
 from .util import solid16x16gif_datauri
 
+from requestbin import config
+
 class Bin(object):
-    max_requests = Setting('max_requests', default=20)
+    max_requests = config.MAX_REQUESTS
 
     def __init__(self, private=False):
         self.created = time.time()
@@ -58,35 +58,39 @@ class Bin(object):
             for _ in xrange(self.max_requests, len(self.requests)):
                 self.requests.pop(self.max_requests)
 
+
 class Request(object):
-    ignore_headers = Setting('ignore_headers', default=[])
-    max_raw_size = Setting('max_raw_size', default=1024*10)
+    ignore_headers = config.IGNORE_HEADERS
+    max_raw_size = config.MAX_RAW_SIZE 
 
     def __init__(self, input=None):
         if input:
             self.id = tinyid(6)
             self.time = time.time()
-            self.remote_addr = input.headers.get('X-Forwarded-For',
-                    input.remote_addr)
+            self.remote_addr = input.headers.get('X-Forwarded-For', input.remote_addr)
             self.method = input.method
             self.headers = dict(input.headers)
+
             for header in self.ignore_headers:
                 self.headers.pop(header, None)
-            self.query_string = input.query_string
+
+            self.query_string = input.args.to_dict(flat=True)
             self.form_data = []
-            for k in input.values:
+
+            for k in input.form:
                 self.form_data.append([k, input.values[k]])
+
             self.body = input.data
             self.path = input.path
-            self.content_length = input.content_length
-            self.content_type = input.content_type
+            self.content_type = self.headers.get("Content-Type", "")
 
-            # This is where the magic of capture.py comes in
-            self.raw = input.environ['raw'].getvalue()
+            self.raw = input.environ.get('raw')
+            self.content_length = len(self.raw)
+
             for header in self.ignore_headers:
                 self.raw = re.sub(r'{}: [^\n]+\n'.format(header), 
                                     '', self.raw, flags=re.IGNORECASE)
-            if len(self.raw) > self.max_raw_size:
+            if self.raw and len(self.raw) > self.max_raw_size:
                 self.raw = self.raw[0:self.max_raw_size]
 
     def to_dict(self):

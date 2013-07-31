@@ -1,14 +1,52 @@
-from flask import Flask, redirect
+from flask import Flask, redirect, url_for
 import config
+
+from cStringIO import StringIO
+
+class WSGIRawBody(object):
+    def __init__(self, application):
+        self.application = application
+
+    def __call__(self, environ, start_response):
+
+        length = environ.get('CONTENT_LENGTH', '0')
+        length = 0 if length == '' else int(length)
+
+        body = environ['wsgi.input'].read(length)
+        environ['raw'] = body
+        environ['wsgi.input'] = StringIO(body)
+
+        # Call the wrapped application
+        app_iter = self.application(environ, self._sr_callback(start_response))
+
+        # Return modified response
+        return app_iter
+
+    def _sr_callback(self, start_response):
+        def callback(status, headers, exc_info=None):
+
+            # Call upstream start_response
+            start_response(status, headers, exc_info)
+        return callback
+
 
 
 app = Flask(__name__)
 
 from werkzeug.contrib.fixers import ProxyFix
-app.wsgi_app = ProxyFix(app.wsgi_app)
+app.wsgi_app = WSGIRawBody(ProxyFix(app.wsgi_app))
 
 app.debug = config.DEBUG
 app.secret_key = config.FLASK_SESSION_SECRET_KEY
+
+from filters import *
+app.jinja_env.filters['status_class'] = status_class
+app.jinja_env.filters['friendly_time'] = friendly_time
+app.jinja_env.filters['friendly_size'] = friendly_size
+app.jinja_env.filters['to_qs'] = to_qs
+app.jinja_env.filters['approximate_time'] = approximate_time
+app.jinja_env.filters['exact_time'] = approximate_time
+app.jinja_env.filters['short_date'] = short_date
 
 app.add_url_rule('/', 'views.home')
 app.add_url_rule('/<name>', 'views.bin', methods=['GET', 'POST', 'DELETE', 'PUT', 'OPTIONS', 'HEAD', 'PATCH', 'TRACE'])
@@ -21,8 +59,7 @@ app.add_url_rule('/api/v1/bins/<bin>/requests/<name>', 'api.request', methods=['
 
 app.add_url_rule('/api/v1/stats', 'api.stats')
 
-app.add_url_rule('/favicon.ico', view_func=lambda: redirect('/static/favicon.ico'))
-app.add_url_rule('/robots.txt', view_func=lambda: redirect('/static/robots.txt'))
-
+# app.add_url_rule('/favicon.ico', redirect_to=url_for('static', filename='favicon.ico'))
+# app.add_url_rule('/robots.txt', redirect_to=url_for('static', filename='robots.txt'))
 
 from requestbin import api, views
