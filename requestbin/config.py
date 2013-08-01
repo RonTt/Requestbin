@@ -2,7 +2,7 @@ import os, urlparse
 DEBUG = True
 REALM = os.environ.get('REALM', 'local')
 
-ROOT_URL = "http://localhost:3000"
+ROOT_URL = "http://localhost:4000"
 
 PORT_NUMBER = 4000
 
