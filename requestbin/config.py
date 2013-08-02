@@ -15,11 +15,19 @@ IGNORE_HEADERS = []
 MAX_REQUESTS = 20
 CLEANUP_INTERVAL = 3600
 
-REDIS_URL = ""
-REDIS_HOST = "localhost"
-REDIS_PORT = 6379
-REDIS_PASSWORD = None
-REDIS_DB = 9
+REDIS_URL = "redis://:YOf48t9MI2cPlEJeJ8hRYSSIAMkaPT9OriuF50hoWK43AScLNhrIsipNxCcKbFwb@proxy1.openredis.com:10043"
+url_parts = urlparse.urlparse(REDIS_URL)
+REDIS_HOST = url_parts.hostname
+REDIS_PORT = url_parts.port
+REDIS_PASSWORD = url_parts.password
+REDIS_DB = url_parts.fragment
+
+# REDIS_HOST = "localhost"
+# REDIS_PORT = 6379
+# REDIS_PASSWORD = None
+# REDIS_DB = 9
+
+
 REDIS_PREFIX = "requestbin"
 
 if REALM == 'prod':

@@ -40,18 +40,6 @@
             {{ message_detail(request) }}
         </div>
       </div>
-
-      <hr>
-
-      <div class="alert-message block-message info">
-        <h4>Limits</h4>
-        <p>This {% if bin.private %}<strong>private</strong>{% endif %}
-        bin will keep the last 20 requests made to it and remain available for 48 hours after it was created.
-        However, data might be cleared at any time, so <strong>treat bins as highly ephemeral</strong>.</p>
-
-        <h4>Need more?</h4>
-        <p><a href="https://www.runscope.com">Sign up for a free Runscope account</a>. Runscope request captures give you live updates, permanent URLs, file handling and much more.</p>
-      </div>
     {% else %}
 
       <h4 class="text-center">Bin URL</h4>
@@ -146,6 +134,18 @@ public class RequestBinTutorial {
       </div>
 
     {% endfor %}
+
+      <hr>
+
+      <div class="alert-message block-message info">
+        <h4>Limits</h4>
+        <p>This {% if bin.private %}<strong>private</strong>{% endif %}
+        bin will keep the last 20 requests made to it and remain available for 48 hours after it was created.
+        However, data might be cleared at any time, so <strong>treat bins as highly ephemeral</strong>.</p>
+
+        <h4>Need more?</h4>
+        <p><a href="https://www.runscope.com">Sign up for a free Runscope account</a>. Runscope request captures give you live updates, permanent URLs, file handling and much more.</p>
+      </div>
 {% endblock %}
 
 

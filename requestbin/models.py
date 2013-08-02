@@ -87,11 +87,12 @@ class Request(object):
             self.raw = input.environ.get('raw')
             self.content_length = len(self.raw)
 
-            for header in self.ignore_headers:
-                self.raw = re.sub(r'{}: [^\n]+\n'.format(header), 
-                                    '', self.raw, flags=re.IGNORECASE)
+            # for header in self.ignore_headers:
+            #     self.raw = re.sub(r'{}: [^\n]+\n'.format(header), 
+            #                         '', self.raw, flags=re.IGNORECASE)
             if self.raw and len(self.raw) > self.max_raw_size:
                 self.raw = self.raw[0:self.max_raw_size]
+
 
     def to_dict(self):
         return dict(
@@ -118,35 +119,39 @@ class Request(object):
     @staticmethod
     def load(data):
         r = Request()
-        r.__dict__ = msgpack.loads(data)
+        try:
+            r.__dict__ = msgpack.loads(data, encoding="utf-8")
+        except (UnicodeDecodeError):
+            r.__dict__ = msgpack.loads(data, encoding="ISO-8859-1")
+
         return r
 
-    def __iter__(self):
-        out = []
-        if self.form_data:
-            if hasattr(self.form_data, 'items'):
-                items = self.form_data.items()
-            else:
-                items = self.form_data
-            for k,v in items:
-                try:
-                    outval = json.dumps(json.loads(v), sort_keys=True, indent=2)
-                except (ValueError, TypeError):
-                    outval = v
-                out.append((k, outval))
-        else:
-            try:
-                out = (('body', json.dumps(json.loads(self.body), sort_keys=True, indent=2)),)
-            except (ValueError, TypeError):
-                out = (('body', self.body),)
+    # def __iter__(self):
+    #     out = []
+    #     if self.form_data:
+    #         if hasattr(self.form_data, 'items'):
+    #             items = self.form_data.items()
+    #         else:
+    #             items = self.form_data
+    #         for k,v in items:
+    #             try:
+    #                 outval = json.dumps(json.loads(v), sort_keys=True, indent=2)
+    #             except (ValueError, TypeError):
+    #                 outval = v
+    #             out.append((k, outval))
+    #     else:
+    #         try:
+    #             out = (('body', json.dumps(json.loads(self.body), sort_keys=True, indent=2)),)
+    #         except (ValueError, TypeError):
+    #             out = (('body', self.body),)
 
-        # Sort by field/file then by field name
-        files = list()
-        fields = list()
-        for (k,v) in out:
-            if type(v) is dict:
-                files.append((k,v))
-            else:
-                fields.append((k,v))
-        return iter(sorted(fields) + sorted(files))
+    #     # Sort by field/file then by field name
+    #     files = list()
+    #     fields = list()
+    #     for (k,v) in out:
+    #         if type(v) is dict:
+    #             files.append((k,v))
+    #         else:
+    #             fields.append((k,v))
+    #     return iter(sorted(fields) + sorted(files))
 
