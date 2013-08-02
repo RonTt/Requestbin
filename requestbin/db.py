@@ -23,3 +23,12 @@ def create_request(bin, request):
 
 def lookup_bin(name):
     return db.lookup_bin(name)
+
+def count_bins():
+    return db.count_bins()
+
+def count_requests():
+    return db.count_requests()
+
+def avg_req_size():
+    return db.avg_req_size()
