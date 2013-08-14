@@ -1,5 +1,5 @@
 from flask import Flask, redirect, url_for
-import config
+import config, os
 
 from cStringIO import StringIO
 
@@ -38,6 +38,19 @@ app.wsgi_app = WSGIRawBody(ProxyFix(app.wsgi_app))
 
 app.debug = config.DEBUG
 app.secret_key = config.FLASK_SESSION_SECRET_KEY
+app.root_path = os.path.abspath(os.path.dirname(__file__))
+
+import bugsnag
+from bugsnag.flask import handle_exceptions
+bugsnag.configure(
+    api_key="58db8ba0ea5f19fa6dae397cba8e7900",
+    project_root=app.root_path,
+    # 'production' is a magic string for bugsnag, rest are arbitrary
+    release_stage = config.REALM.replace("prod", "production"),
+    notify_release_stages=["production", "test"],
+    use_ssl = True
+)
+handle_exceptions(app)
 
 from filters import *
 app.jinja_env.filters['status_class'] = status_class
@@ -59,7 +72,6 @@ app.add_url_rule('/api/v1/bins/<bin>/requests/<name>', 'api.request', methods=['
 
 app.add_url_rule('/api/v1/stats', 'api.stats')
 
-# app.add_url_rule('/favicon.ico', redirect_to=url_for('static', filename='favicon.ico'))
 # app.add_url_rule('/robots.txt', redirect_to=url_for('static', filename='robots.txt'))
 
 from requestbin import api, views
