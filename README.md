@@ -1,11 +1,7 @@
-# [RequestB.in](http://requestb.in)
+# [RequestBin](http://requestb.in)
+## A Runscope community project.
 
 Originally Created by [Jeff Lindsay](http://progrium.com)
-
-Contributors
-------------
- * Barry Carlyon <barry@barrycarlyon.co.uk>
- * Jeff Lindsay <progrium@gmail.com>
 
 License
 -------
@@ -41,3 +37,9 @@ Now just deploy via git:
 `$ git push heroku master`
 
 It will push to Heroku and give you a URL that your own private RequestBin will be running.
+
+
+Contributors
+------------
+ * Barry Carlyon <barry@barrycarlyon.co.uk>
+ * Jeff Lindsay <progrium@gmail.com>

@@ -6,7 +6,7 @@ ROOT_URL = "http://localhost:3000"
 
 PORT_NUMBER = 4000
 
-FLASK_SESSION_SECRET_KEY = "N1BKhJLnBqLpexOZdklsfDKFJDKFadsfs9a3r324YB7B73AglRmrHMDQ9RhXz35"
+FLASK_SESSION_SECRET_KEY = os.environ.get("SESSION_SECRET_KEY", "N1BKhJLnBqLpexOZdklsfDKFJDKFadsfs9a3r324YB7B73AglRmrHMDQ9RhXz35")
 
 BIN_TTL = 48*3600
 STORAGE_BACKEND = "requestbin.storage.redis.RedisStorage"
@@ -23,7 +23,7 @@ REDIS_DB = 9
 REDIS_PREFIX = "requestbin"
 
 if REALM == 'prod':
-    DEBUG = True
+    DEBUG = False
     ROOT_URL = "http://requestb.in"
 
     STORAGE_BACKEND = "requestbin.storage.redis.RedisStorage"
