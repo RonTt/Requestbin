@@ -40,17 +40,18 @@ app.debug = config.DEBUG
 app.secret_key = config.FLASK_SESSION_SECRET_KEY
 app.root_path = os.path.abspath(os.path.dirname(__file__))
 
-import bugsnag
-from bugsnag.flask import handle_exceptions
-bugsnag.configure(
-    api_key="58db8ba0ea5f19fa6dae397cba8e7900",
-    project_root=app.root_path,
-    # 'production' is a magic string for bugsnag, rest are arbitrary
-    release_stage = config.REALM.replace("prod", "production"),
-    notify_release_stages=["production", "test"],
-    use_ssl = True
-)
-handle_exceptions(app)
+if config.BUGSNAG_KEY:
+    import bugsnag
+    from bugsnag.flask import handle_exceptions
+    bugsnag.configure(
+        api_key=config.BUGSNAG_KEY,
+        project_root=app.root_path,
+        # 'production' is a magic string for bugsnag, rest are arbitrary
+        release_stage = config.REALM.replace("prod", "production"),
+        notify_release_stages=["production", "test"],
+        use_ssl = True
+    )
+    handle_exceptions(app)
 
 from filters import *
 app.jinja_env.filters['status_class'] = status_class
