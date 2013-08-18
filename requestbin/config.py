@@ -9,30 +9,25 @@ PORT_NUMBER = 4000
 FLASK_SESSION_SECRET_KEY = "N1BKhJLnBqLpexOZdklsfDKFJDKFadsfs9a3r324YB7B73AglRmrHMDQ9RhXz35"
 
 BIN_TTL = 48*3600
-STORAGE_BACKEND = "requestbin.storage.redis.RedisStorage"
+STORAGE_BACKEND = "requestbin.storage.memory.MemoryStorage"
 MAX_RAW_SIZE = 1024*10
 IGNORE_HEADERS = []
 MAX_REQUESTS = 20
 CLEANUP_INTERVAL = 3600
 
-REDIS_URL = "redis://:YOf48t9MI2cPlEJeJ8hRYSSIAMkaPT9OriuF50hoWK43AScLNhrIsipNxCcKbFwb@proxy1.openredis.com:10043"
-url_parts = urlparse.urlparse(REDIS_URL)
-REDIS_HOST = url_parts.hostname
-REDIS_PORT = url_parts.port
-REDIS_PASSWORD = url_parts.password
-REDIS_DB = url_parts.fragment
-
-# REDIS_HOST = "localhost"
-# REDIS_PORT = 6379
-# REDIS_PASSWORD = None
-# REDIS_DB = 9
-
+REDIS_URL = ""
+REDIS_HOST = "localhost"
+REDIS_PORT = 6379
+REDIS_PASSWORD = None
+REDIS_DB = 9
 
 REDIS_PREFIX = "requestbin"
 
 if REALM == 'prod':
     DEBUG = True
     ROOT_URL = "http://requestb.in"
+
+    FLASK_SESSION_SECRET_KEY = os.environ.get("SESSION_SECRET_KEY", FLASK_SESSION_SECRET_KEY)
 
     STORAGE_BACKEND = "requestbin.storage.redis.RedisStorage"
 
