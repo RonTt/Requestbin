@@ -4,11 +4,11 @@ from setuptools import setup, find_packages
 
 setup(
     name='requestbin',
-    version='1.1.0',
-    author='Jeff Lindsay',
-    author_email='jeff.lindsay@twilio.com',
+    version='2.0.0',
+    author='Runscope',
+    author_email='help@runscope.com',
     description='HTTP request collector and inspector',
     packages=find_packages(),
-    install_requires=['ginkgo', 'feedparser'],
+    install_requires=['feedparser'],
     data_files=[],
 )

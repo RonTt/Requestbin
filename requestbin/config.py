@@ -6,7 +6,7 @@ ROOT_URL = "http://localhost:4000"
 
 PORT_NUMBER = 4000
 
-FLASK_SESSION_SECRET_KEY = "N1BKhJLnBqLpexOZdklsfDKFJDKFadsfs9a3r324YB7B73AglRmrHMDQ9RhXz35"
+FLASK_SESSION_SECRET_KEY = os.environ.get("SESSION_SECRET_KEY", "N1BKhJLnBqLpexOZdklsfDKFJDKFadsfs9a3r324YB7B73AglRmrHMDQ9RhXz35")
 
 BIN_TTL = 48*3600
 STORAGE_BACKEND = "requestbin.storage.memory.MemoryStorage"
@@ -26,7 +26,7 @@ REDIS_PREFIX = "requestbin"
 BUGSNAG_KEY = ""
 
 if REALM == 'prod':
-    DEBUG = True
+    DEBUG = False
     ROOT_URL = "http://requestb.in"
 
     FLASK_SESSION_SECRET_KEY = os.environ.get("SESSION_SECRET_KEY", FLASK_SESSION_SECRET_KEY)
