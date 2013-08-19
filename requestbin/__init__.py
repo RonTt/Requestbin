@@ -59,7 +59,7 @@ app.jinja_env.filters['friendly_time'] = friendly_time
 app.jinja_env.filters['friendly_size'] = friendly_size
 app.jinja_env.filters['to_qs'] = to_qs
 app.jinja_env.filters['approximate_time'] = approximate_time
-app.jinja_env.filters['exact_time'] = approximate_time
+app.jinja_env.filters['exact_time'] = exact_time
 app.jinja_env.filters['short_date'] = short_date
 
 app.add_url_rule('/', 'views.home')
