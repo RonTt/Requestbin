@@ -6,7 +6,7 @@ setup(
     name='requestbin',
     version='2.0.0',
     author='Runscope',
-    author_email='help@runscope.com',
+    author_email='requestbin@runscope.com',
     description='HTTP request collector and inspector',
     packages=find_packages(),
     install_requires=['feedparser'],
