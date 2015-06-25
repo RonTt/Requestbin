@@ -20,17 +20,13 @@ From the project directory, create a Heroku application:
 
 `$ heroku create`
 
-Add Heroku's addon for redistogo
+Add Heroku's redis addon:
 
-`$ heroku addons:add redistogo:nano --app {app_name}`
+`$ heroku addons:add heroku-redis`
 
-Find your redistogo connection details
+Set an environment variable to indicate production:
 
-`$ heroku config --app {app_name} | grep REDISTOGO_URL`
-
-Modify line 19 of config/heroku.conf.py on redis details
-
-`redis_url = urlparse.urlparse(os.environ.get("REDIS_URL", "redis://REDISTOGO_URL:REDISTOGO_PORT/0"))`
+`$ heroku config:set REALM=prod`
 
 Now just deploy via git:
 
