@@ -28,9 +28,13 @@ Find your redistogo connection details
 
 `$ heroku config --app {app_name} | grep REDISTOGO_URL`
 
-Modify line 19 of config/heroku.conf.py on redis details
+Open `requestbin/config.py` and locate variables `REDIS_URL` and `REDIS_PORT`. Edit them with the connection details you got in the previous step:
 
-`redis_url = urlparse.urlparse(os.environ.get("REDIS_URL", "redis://REDISTOGO_URL:REDISTOGO_PORT/0"))`
+```python
+REDIS_URL = "REDISTOGO_URL"
+REDIS_HOST = "localhost"
+REDIS_PORT = REDISTOGO_PORT
+```
 
 Now just deploy via git:
 
