@@ -102,6 +102,7 @@ class Request(object):
             method=self.method,
             headers=self.headers,
             query_string=self.query_string,
+            raw=self.raw,
             form_data=self.form_data,
             body=self.body,
             path=self.path,
