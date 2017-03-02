@@ -2,7 +2,7 @@ FROM python:2.7-alpine
 
 RUN apk update && apk upgrade && \
     apk add \
-        gcc python python-dev py2-pip \
+        gcc python python-dev py-pip \
         # greenlet
         musl-dev \
         # sys/queue.h
