@@ -1,7 +1,10 @@
-from flask import Flask, redirect, url_for
-import config, os
-
+import config
+import os
 from cStringIO import StringIO
+
+from flask import Flask
+from flask_cors import CORS
+
 
 class WSGIRawBody(object):
     def __init__(self, application):
@@ -32,6 +35,9 @@ class WSGIRawBody(object):
 
 
 app = Flask(__name__)
+
+if os.environ.get('ENABLE_CORS', config.ENABLE_CORS):
+    cors = CORS(app, resources={r"*": {"origins": os.environ.get('CORS_ORIGINS', config.CORS_ORIGINS)}})
 
 from werkzeug.contrib.fixers import ProxyFix
 app.wsgi_app = WSGIRawBody(ProxyFix(app.wsgi_app))
