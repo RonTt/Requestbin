@@ -1,5 +1,4 @@
-# [RequestBin](http://requestb.in)
-## A Runscope community project.
+# We have discontinued the publicly hosted version of RequestBin due to ongoing abuse that made it very difficult to keep the site up reliably. Please see instructions below for setting up your own self-hosted instance.
 
 Originally Created by [Jeff Lindsay](http://progrium.com)
 
