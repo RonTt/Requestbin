@@ -15,8 +15,8 @@ except ImportError, e:
 
 db = klass(bin_ttl)
 
-def create_bin(private=False):
-    return db.create_bin(private)
+def create_bin(private=False, custon_name=None):
+    return db.create_bin(private, custon_name)
 
 def create_request(bin, request):
     return db.create_request(bin, request)

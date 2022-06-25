@@ -1,6 +1,7 @@
 **/**/*.pyc
 *.egg-info
 **/*.pyc
+.idea
 serviced.log
 
 codekit-config.json
