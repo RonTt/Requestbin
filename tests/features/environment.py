@@ -2,7 +2,6 @@ import requests
 from hamcrest import *
 
 bin_name = "stuart"
-uri = "http://localhost:8000"
 payload = {
     "data": {
         "schedulePackage": {
@@ -51,17 +50,12 @@ def before_all(context):
     - create a named bin
     - post the webhook to the bin
     """
+    uri = context.config.userdata.get("endpoint", "http://localhost:9000")
     context.vars = {'uri': uri, 'bin_name': bin_name}
 
     if requests.get('{}/{}'.format(context.vars['uri'], context.vars['bin_name'])).status_code != 200:
         create_bin = requests.post('{}/api/v1/bins'.format(context.vars['uri']), data={"given_name": bin_name})
         assert_that(create_bin.status_code, equal_to(200))
 
-    if requests.get('{}/api/v1/bins/{}/requests'.format(context.vars['uri'], context.vars['bin_name']),
-                       timeout=(5, 10)).status_code != 200:
-        # res = requests.get('{}/api/v1/bins/{}/requests'.format(context.vars['uri'], context.vars['bin_name']),
-        #                   timeout=(5, 10))
-        # print(res.status_code)
-
-        webhook = requests.post('{}/{}'.format(context.vars['uri'], context.vars['bin_name']), json=payload)
-        assert_that(webhook.status_code, equal_to(200))
+    webhook = requests.post('{}/{}'.format(context.vars['uri'], context.vars['bin_name']), json=payload)
+    assert_that(webhook.status_code, equal_to(200))
