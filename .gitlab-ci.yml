@@ -1,0 +1,82 @@
+# PROPOSED pipeline
+# prerequisites: if ubuntu:latest does not contain pip or docker,
+# create an image install them and use this new image in the pipeline
+
+stages:
+    - build
+    - test
+    - deploy
+    - test-prod
+
+check-lint:
+    image: ubuntu:latest
+    stage: build
+    script:
+        - pip install -r tests/requirments.txt
+        - pycodestyle tests/ --max-line-length=120
+    rules:
+        - if: $CI_PIPELINE_SOURCE == "push"
+
+docker-build:
+    image: ubuntu:latest
+    stage: build
+    script:
+        - docker build . --file Dockerfile
+    rules:
+        - if: $CI_PIPELINE_SOURCE == "push"
+
+e2e-test:
+    image: ubuntu:latest
+    stage: test
+    variables:
+        ENDPOINT: "http://localhost:8000"
+    script:
+        - docker-compose build && docker-compose up
+        - virtualenv venv
+        - source venv/bin/activate
+        - pip install -r tests/requirments.txt
+        - behave tests/features/ -D endpoint=$ENDPOINT
+    artifacts:
+        paths:
+            - plain.output
+    rules:
+        - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+
+deploy-prod:
+    image: ubuntu:latest
+    stage: deploy
+    script: echo "DEPLOY" # - commands to deploy in prod
+    rules:
+        - if: '$CI_PIPELINE_SOURCE == "push" && $CI_BUILD_REF_NAME == "master"'
+    when: manual
+
+e2e-test-prod:
+    needs:
+        - deploy-prod
+    image: ubuntu:latest
+    stage: test-prod
+    variables:
+        ENDPOINT: "https://produrl"
+    script:
+        - virtualenv venv
+        - source venv/bin/activate
+        - pip install -r tests/requirments.txt
+        - behave tests/features/ --tags="@prod" -D endpoint=$ENDPOINT
+    artifacts:
+        paths:
+            - plain.output
+    rules:
+        - if: '$CI_PIPELINE_SOURCE == "push" && $CI_BUILD_REF_NAME == "master"'
+
+non-functional-test:
+    image: ubuntu:latest
+    stage: test-prod
+    variables:
+        ENDPOINT: "https://produrl"
+    script:
+        - echo "non-functional tests" # commands to run non-functional tests
+    artifacts:
+        paths:
+            - test.output
+    rules:
+        - if: $CI_PIPELINE_SOURCE == "schedule"

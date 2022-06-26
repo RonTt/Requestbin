@@ -1,8 +1,9 @@
 **/**/*.pyc
 *.egg-info
 **/*.pyc
+.idea
 serviced.log
-
+plain.output
 codekit-config.json
 
 # Mac Files

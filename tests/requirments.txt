@@ -1,0 +1,4 @@
+behave == 1.2.6
+requests == 2.27.1
+pyhamcrest == 1.10.1
+pycodestyle == 2.4.0
