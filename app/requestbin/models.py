@@ -16,11 +16,11 @@ from requestbin import config
 class Bin(object):
     max_requests = config.MAX_REQUESTS
 
-    def __init__(self, private=False):
+    def __init__(self, private=False, key = ''):
         self.created = time.time()
         self.private = private
         self.color = random_color()
-        self.name = tinyid(8)
+        self.name = key if len(key) > 0 else tinyid(8)
         self.favicon_uri = solid16x16gif_datauri(*self.color)
         self.requests = []
         self.secret_key = os.urandom(24) if self.private else None
